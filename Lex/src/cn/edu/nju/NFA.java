@@ -27,11 +27,12 @@ public class NFA {
      * NFA . NFA' 合并
      */
     public void connectNFA(NFA nfa) {
-        this.stateSet.addAll(nfa.stateSet);
+        // 修改状态转移
         getAcceptStates().forEach(e -> {
             e.setAcceptState(false);
             e.addNextState('\0', nfa.getStartState());
         });
+        this.stateSet.addAll(nfa.stateSet);
     }
 
     /**
@@ -64,15 +65,15 @@ public class NFA {
     public void closureNFA(State newStart, State newAccept) {
         newStart.addNextState('\0', this.startState);
         newStart.addNextState('\0', newAccept);
-        // 添加新状态
-        this.stateSet.add(newStart);
-        this.stateSet.add(newAccept);
         // 修改状态转移
         this.getAcceptStates().forEach(e -> {
             e.setAcceptState(false);
             e.addNextState('\0', newAccept);
             e.addNextState('\0', startState);
         });
+        // 添加新状态
+        this.stateSet.add(newStart);
+        this.stateSet.add(newAccept);
         // 设置新初始状态
         this.startState = newStart;
     }
@@ -80,4 +81,10 @@ public class NFA {
     public State getStartState() {
         return startState;
     }
+
+    public void print() {
+        System.out.println("Start State: " + startState.getStateId());
+        stateSet.forEach(System.out::println);
+    }
+
 }

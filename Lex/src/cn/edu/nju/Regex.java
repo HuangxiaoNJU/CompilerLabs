@@ -123,7 +123,7 @@ public class Regex {
                 State state1 = new State(stateId++);
                 State state2 = new State(stateId++, true);
                 state1.addNextState(c, state2);
-                NFA nfa = new NFA(state1, Arrays.asList(state1, state2));
+                NFA nfa = new NFA(state1, new ArrayList<>(Arrays.asList(state1, state2)));
                 stack.push(nfa);
             }
         }
@@ -134,6 +134,8 @@ public class Regex {
         Regex regex = new Regex("ab(a|b)a*");
         System.out.println(regex.appendConnectDot());
         System.out.println(regex.postorder());
+        NFA nfa = regex.toNFA();
+        nfa.print();
     }
 
 }
