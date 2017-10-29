@@ -7,7 +7,7 @@ public class Regex {
     // 正则表达式（字符串中缀表示）
     private String expression;
 
-    // 正则表达式运算符（按优先级从小到大排序）
+    // 正则表达式运算符（优先级从小到大排序）
     private static final List<Character> OPERATION_CHAR;
     static {
         OPERATION_CHAR = Arrays.asList('|', '.', '*');
@@ -45,7 +45,7 @@ public class Regex {
     /**
      * 正则表达式中缀转后缀
      */
-    public String postorder() throws RegexException {
+    private String postorder() throws RegexException {
         String inorder = appendConnectDot() + '$';
         StringBuilder sb = new StringBuilder();
         Stack<Character> stack = new Stack<>();
@@ -87,6 +87,47 @@ public class Regex {
 
         }
         return sb.toString();
+    }
+
+    /**
+     * RE to NFA
+     * @return NFA
+     */
+    public NFA toNFA() throws RegexException {
+        // RE转换为后缀表示
+        String postorder = postorder();
+        Stack<NFA> stack = new Stack<>();
+        int stateId = 0;
+        for (int i = 0; i < postorder.length(); i++) {
+            char c = postorder.charAt(i);
+            if (c == '.') {
+                NFA nfa2 = stack.pop();
+                NFA nfa1 = stack.pop();
+                nfa1.connectNFA(nfa2);
+                stack.push(nfa1);
+            } else if (c == '|') {
+                NFA nfa2 = stack.pop();
+                NFA nfa1 = stack.pop();
+                State newStart = new State(stateId++);
+                State newAccept = new State(stateId++, true);
+                nfa1.orNFA(nfa2, newStart, newAccept);
+                stack.push(nfa1);
+            } else if (c == '*') {
+                NFA nfa = stack.pop();
+                State newStart = new State(stateId++);
+                State newAccept = new State(stateId++, true);
+                nfa.closureNFA(newStart, newAccept);
+                stack.push(nfa);
+            } else {
+                // 非运算符，生成DFA
+                State state1 = new State(stateId++);
+                State state2 = new State(stateId++, true);
+                state1.addNextState(c, state2);
+                NFA nfa = new NFA(state1, Arrays.asList(state1, state2));
+                stack.push(nfa);
+            }
+        }
+        return stack.peek();
     }
 
     public static void main(String[] args) throws RegexException {
