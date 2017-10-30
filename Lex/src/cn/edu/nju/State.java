@@ -35,12 +35,25 @@ public class State {
         }
     }
 
-    public int getStateId() {
-        return stateId;
+    /**
+     * 获取通过c边到达的状态集
+     */
+    public Set<State> next(char c) {
+        if (nextState.containsKey(c)) {
+            return nextState.get(c);
+        }
+        return new HashSet<>();
     }
 
-    public Map<Character, Set<State>> getNextState() {
-        return nextState;
+    /**
+     * 获取状态所有出边字符集合
+     */
+    public Set<Character> getEdgeSet() {
+        return nextState.keySet();
+    }
+
+    public int getStateId() {
+        return stateId;
     }
 
     public void setNextState(Map<Character, Set<State>> nextState) {
@@ -58,7 +71,6 @@ public class State {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-//        sb.append("stateId:").append(stateId).append(" isAccept:").append(isAcceptState).append('\n');
         for (Character character : nextState.keySet()) {
             for (State state : nextState.get(character)) {
                 sb.append(stateId).append(" --").append(character).append("--> ").append(state.stateId).append('\n');

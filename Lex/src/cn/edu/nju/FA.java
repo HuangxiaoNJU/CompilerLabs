@@ -25,7 +25,7 @@ public class FA {
      */
     public Set<Character> getSigma() {
         Set<Character> res = new HashSet<>();
-        stateSet.forEach(e -> res.addAll(e.getNextState().keySet()));
+        stateSet.forEach(e -> res.addAll(e.getEdgeSet()));
         res.remove('\0');
         return res;
     }
@@ -40,16 +40,29 @@ public class FA {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * 获取非接受状态集
+     */
+    public Set<State> getNonAcceptState() {
+        return stateSet
+                .stream()
+                .filter(e -> !e.isAcceptState())
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 获取开始状态
+     */
+    public State getStartState() {
+        return startState;
+    }
+
     public void print() {
         System.out.println("Start State:\t" + startState.getStateId());
         System.out.print("Accept State:\t");
         getAcceptStates().forEach(e -> System.out.print(e.getStateId() + " "));
         System.out.println();
         stateSet.forEach(System.out::println);
-    }
-
-    public State getStartState() {
-        return startState;
     }
 
 }

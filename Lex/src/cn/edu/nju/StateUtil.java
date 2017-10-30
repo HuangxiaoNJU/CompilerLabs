@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 状态集工具类
+ * 状态集操作工具类
  */
-public class SetUtil {
+public class StateUtil {
 
     /**
      * 判断两个状态集中状态是否完全相同
@@ -23,8 +23,15 @@ public class SetUtil {
      * @param state single state
      * @return      Set
      */
-    public static Set<State> toSet(State state) {
+    public static Set<State> stateToSet(State state) {
         return new HashSet<State>(){{ add(state); }};
+    }
+
+    public static State setToState(Set<State> set) {
+        if (set.size() == 1) {
+            return (State) set.toArray()[0];
+        }
+        return null;
     }
 
     /**
