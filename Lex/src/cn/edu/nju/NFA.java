@@ -1,26 +1,11 @@
 package cn.edu.nju;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class NFA {
-
-    private List<State> stateSet;
-    private State startState;
+public class NFA extends FA {
 
     public NFA(State startState, List<State> stateSet) {
-        this.startState = startState;
-        this.stateSet = stateSet;
-    }
-
-    /**
-     * 获取接受状态集
-     */
-    public List<State> getAcceptStates() {
-        return stateSet
-                .stream()
-                .filter(State::isAcceptState)
-                .collect(Collectors.toList());
+        super(startState, stateSet);
     }
 
     /**
@@ -32,7 +17,7 @@ public class NFA {
             e.setAcceptState(false);
             e.addNextState('\0', nfa.getStartState());
         });
-        this.stateSet.addAll(nfa.stateSet);
+        super.stateSet.addAll(nfa.stateSet);
     }
 
     /**
@@ -78,13 +63,5 @@ public class NFA {
         this.startState = newStart;
     }
 
-    public State getStartState() {
-        return startState;
-    }
-
-    public void print() {
-        System.out.println("Start State: " + startState.getStateId());
-        stateSet.forEach(System.out::println);
-    }
 
 }

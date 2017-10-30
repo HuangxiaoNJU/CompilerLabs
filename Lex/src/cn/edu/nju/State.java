@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class State {
+
     // 状态id
     private int stateId;
     private Map<Character, Set<State>> nextState;
@@ -57,7 +58,7 @@ public class State {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("stateId:").append(stateId).append(" isAccept:").append(isAcceptState).append('\n');
+//        sb.append("stateId:").append(stateId).append(" isAccept:").append(isAcceptState).append('\n');
         for (Character character : nextState.keySet()) {
             for (State state : nextState.get(character)) {
                 sb.append(stateId).append(" --").append(character).append("--> ").append(state.stateId).append('\n');

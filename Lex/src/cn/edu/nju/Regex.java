@@ -94,7 +94,7 @@ public class Regex {
      * @return NFA
      */
     public NFA toNFA() throws RegexException {
-        // RE转换为后缀表示
+        // RE转换后缀
         String postorder = postorder();
         Stack<NFA> stack = new Stack<>();
         int stateId = 0;
@@ -130,8 +130,11 @@ public class Regex {
         return stack.peek();
     }
 
+    /**
+     * 测试main
+     */
     public static void main(String[] args) throws RegexException {
-        Regex regex = new Regex("ab(a|b)a*");
+        Regex regex = new Regex("(a*|b*)*");
         System.out.println(regex.appendConnectDot());
         System.out.println(regex.postorder());
         NFA nfa = regex.toNFA();
