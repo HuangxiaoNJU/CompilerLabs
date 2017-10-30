@@ -42,10 +42,11 @@ public class DFA extends FA {
     }
 
     /**
-     * 判断子集是否对应DFA的接受状态
+     * 判断新状态集是否对应原FA的接受状态
+     * 即判断状态集与原FA接受状态集交集是否为空
      */
-    private boolean isSubsetBeAcceptState(Set<State> subset, Set<State> nfaAcceptStateSet) {
-        return StateUtil.intersection(subset, nfaAcceptStateSet).size() > 0;
+    private boolean isNewSetAccept(Set<State> subset, Set<State> acceptStateSet) {
+        return !StateUtil.intersection(subset, acceptStateSet).isEmpty();
     }
 
     /**
@@ -63,7 +64,7 @@ public class DFA extends FA {
         // DFA 开始状态
         Set<State> startSubset = epsilonClosure(StateUtil.stateToSet(nfa.getStartState()));
         subsetList.add(startSubset);
-        State dfaStartState = new State(0, isSubsetBeAcceptState(startSubset, nfaAcceptStateSet));
+        State dfaStartState = new State(0, isNewSetAccept(startSubset, nfaAcceptStateSet));
         stateSet.add(dfaStartState);
         startState = dfaStartState;
         // 子集构造法
@@ -80,7 +81,7 @@ public class DFA extends FA {
                     nextStateMap.put(c, StateUtil.stateToSet(stateSet.get(index)));
                 } else {
                     subsetList.add(newSubset);
-                    State newState = new State(stateSet.size(), isSubsetBeAcceptState(newSubset, nfaAcceptStateSet));
+                    State newState = new State(stateSet.size(), isNewSetAccept(newSubset, nfaAcceptStateSet));
                     stateSet.add(newState);
                     nextStateMap.put(c, StateUtil.stateToSet(newState));
                 }
@@ -149,19 +150,43 @@ public class DFA extends FA {
                     newPI.add(states);
                 }
             }
-            // 不可再划分，结束循环
+            // 不可再划分，循环结束
             if (pi.size() == newPI.size()) {
                 break;
-            } else {
-                pi = new ArrayList<>(newPI);
-                newPI.clear();
             }
+            pi = new ArrayList<>(newPI);
+            newPI.clear();
         }
-        generateMinimalDFA(pi);
+        generateMinimalDFA(pi, sigma);
     }
 
-    private void generateMinimalDFA(List<Set<State>> pi) {
-
+    private void generateMinimalDFA(List<Set<State>> pi, Set<Character> sigma) {
+        List<State> minimalDFAStates = new ArrayList<>();
+        Set<State> originalAcceptSet = getAcceptStates();
+        // 初始化新状态，同时判断新状态是否为开始状态或终态
+        for (int i = 0; i < pi.size(); i++) {
+            Set<State> group = pi.get(i);
+            State newState = new State(i, isNewSetAccept(group, originalAcceptSet));
+            minimalDFAStates.add(newState);
+            if (group.contains(startState)) {
+                startState = newState;
+            }
+        }
+        // 建立新状态转换图
+        for (int i = 0; i < pi.size(); i++) {
+            State newState = minimalDFAStates.get(i);
+            for (Character c : sigma) {
+                for (State state : pi.get(i)) {
+                    Set<State> nextStates = state.next(c);
+                    if (!nextStates.isEmpty()) {
+                        int groupNum = getGroupNum(pi, StateUtil.setToState(nextStates));
+                        newState.addNextState(c, minimalDFAStates.get(groupNum));
+                        break;
+                    }
+                }
+            }
+        }
+        stateSet = minimalDFAStates;
     }
 
     /**
@@ -172,6 +197,7 @@ public class DFA extends FA {
 //        nfa.print();
         DFA dfa = new DFA(nfa);
         dfa.minimizeDFA();
+        dfa.print();
 //        Set<State> states = dfa.epsilonClosure(
 //            nfa.getStateSet().stream().filter(e -> e.getStateId() == 2 || e.getStateId() == 6).collect(Collectors.stateToSet())
 //        );
