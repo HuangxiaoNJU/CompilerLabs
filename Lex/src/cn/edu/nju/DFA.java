@@ -190,14 +190,15 @@ public class DFA extends FA {
      * 测试main
      */
     public static void main(String[] args) throws RegexException {
-        NFA nfa = new Regex("(a|b)*abb(a|b)*").toNFA();
+        NFA nfa = new Regex("aa*((bab*a)*(a|b)b*)*").toNFA();
+//        nfa.print();
         DFA dfa = new DFA(nfa);
         dfa.minimizeDFA();
         dfa.print();
+
 //        Set<State> states = dfa.epsilonClosure(
 //            nfa.getStateSet().stream().filter(e -> e.getStateId() == 2 || e.getStateId() == 6).collect(Collectors.stateToSet())
 //        );
-
 //        states.forEach(e -> System.out.print(e.getStateId() + " "));
     }
 

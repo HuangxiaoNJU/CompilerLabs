@@ -76,7 +76,7 @@ public class State {
 
                 sb.append(stateId)
                         .append(" --")
-                        .append(character == '\0' ? 'e' : character)
+                        .append(character)
                         .append("--> ")
                         .append(state.stateId).append('\n');
             }

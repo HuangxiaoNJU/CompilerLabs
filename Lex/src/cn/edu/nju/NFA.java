@@ -4,6 +4,8 @@ import java.util.List;
 
 public class NFA extends FA {
 
+    private static final char EPSILON = '\0';
+
     public NFA(State startState, List<State> stateSet) {
         super(startState, stateSet);
     }
@@ -15,7 +17,7 @@ public class NFA extends FA {
         // 修改状态转移
         getAcceptStates().forEach(e -> {
             e.setAcceptState(false);
-            e.addNextState('\0', nfa.getStartState());
+            e.addNextState(EPSILON, nfa.getStartState());
         });
         stateSet.addAll(nfa.stateSet);
     }
@@ -26,15 +28,15 @@ public class NFA extends FA {
      * @param newAccept 新接受状态
      */
     public void orNFA(NFA nfa, State newStart, State newAccept) {
-        newStart.addNextState('\0', this.getStartState());
-        newStart.addNextState('\0', nfa.getStartState());
+        newStart.addNextState(EPSILON, this.getStartState());
+        newStart.addNextState(EPSILON, nfa.getStartState());
         this.getAcceptStates().forEach(e -> {
             e.setAcceptState(false);
-            e.addNextState('\0', newAccept);
+            e.addNextState(EPSILON, newAccept);
         });
         nfa.getAcceptStates().forEach(e -> {
             e.setAcceptState(false);
-            e.addNextState('\0', newAccept);
+            e.addNextState(EPSILON, newAccept);
         });
         this.stateSet.addAll(nfa.stateSet);
         this.stateSet.add(newStart);
@@ -48,13 +50,13 @@ public class NFA extends FA {
      * @param newAccept 新接受状态
      */
     public void closureNFA(State newStart, State newAccept) {
-        newStart.addNextState('\0', this.startState);
-        newStart.addNextState('\0', newAccept);
+        newStart.addNextState(EPSILON, this.startState);
+        newStart.addNextState(EPSILON, newAccept);
         // 修改状态转移
         this.getAcceptStates().forEach(e -> {
             e.setAcceptState(false);
-            e.addNextState('\0', newAccept);
-            e.addNextState('\0', startState);
+            e.addNextState(EPSILON, newAccept);
+            e.addNextState(EPSILON, startState);
         });
         // 添加新状态
         this.stateSet.add(newStart);

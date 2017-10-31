@@ -29,6 +29,7 @@ public class StateUtil {
 
     /**
      * 获取状态集中任意一个状态
+     * 状态集为空返回null
      * @param set   state set
      * @return      Set
      */
