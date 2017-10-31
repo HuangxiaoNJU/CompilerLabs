@@ -57,6 +57,9 @@ public class FA {
         return startState;
     }
 
+    /**
+     * 打印FA
+     */
     public void print() {
         System.out.println("Start State:\t" + startState.getStateId());
         System.out.print("Accept State:\t");

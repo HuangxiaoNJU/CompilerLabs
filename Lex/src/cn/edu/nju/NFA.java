@@ -17,7 +17,7 @@ public class NFA extends FA {
             e.setAcceptState(false);
             e.addNextState('\0', nfa.getStartState());
         });
-        super.stateSet.addAll(nfa.stateSet);
+        stateSet.addAll(nfa.stateSet);
     }
 
     /**

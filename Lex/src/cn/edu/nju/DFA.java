@@ -118,8 +118,8 @@ public class DFA extends FA {
         Set<Character> sigma = getSigma();
         List<Set<State>> pi = new ArrayList<>();
         List<Set<State>> newPI = new ArrayList<>();
-        pi.add(getAcceptStates());
         pi.add(getNonAcceptState());
+        pi.add(getAcceptStates());
         while (true) {
             for (Set<State> states : pi) {
                 // 组内已只有一个状态
@@ -174,15 +174,12 @@ public class DFA extends FA {
         }
         // 建立新状态转换图
         for (int i = 0; i < pi.size(); i++) {
-            State newState = minimalDFAStates.get(i);
+            State oneStateInGroup = StateUtil.setToState(pi.get(i));
             for (Character c : sigma) {
-                for (State state : pi.get(i)) {
-                    Set<State> nextStates = state.next(c);
-                    if (!nextStates.isEmpty()) {
-                        int groupNum = getGroupNum(pi, StateUtil.setToState(nextStates));
-                        newState.addNextState(c, minimalDFAStates.get(groupNum));
-                        break;
-                    }
+                Set<State> nextStates = oneStateInGroup.next(c);
+                if (!nextStates.isEmpty()) {
+                    int groupNum = getGroupNum(pi, StateUtil.setToState(nextStates));
+                    minimalDFAStates.get(i).addNextState(c, minimalDFAStates.get(groupNum));
                 }
             }
         }
@@ -194,7 +191,6 @@ public class DFA extends FA {
      */
     public static void main(String[] args) throws RegexException {
         NFA nfa = new Regex("(a|b)*abb(a|b)*").toNFA();
-//        nfa.print();
         DFA dfa = new DFA(nfa);
         dfa.minimizeDFA();
         dfa.print();

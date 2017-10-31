@@ -36,7 +36,7 @@ public class State {
     }
 
     /**
-     * 获取通过c边到达的状态集
+     * 获取通过c边到达能到达的状态集
      */
     public Set<State> next(char c) {
         if (nextState.containsKey(c)) {
@@ -73,7 +73,12 @@ public class State {
         StringBuilder sb = new StringBuilder();
         for (Character character : nextState.keySet()) {
             for (State state : nextState.get(character)) {
-                sb.append(stateId).append(" --").append(character).append("--> ").append(state.stateId).append('\n');
+
+                sb.append(stateId)
+                        .append(" --")
+                        .append(character == '\0' ? 'e' : character)
+                        .append("--> ")
+                        .append(state.stateId).append('\n');
             }
         }
         return sb.toString();

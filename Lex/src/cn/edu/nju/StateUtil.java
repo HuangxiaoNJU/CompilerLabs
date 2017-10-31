@@ -27,11 +27,16 @@ public class StateUtil {
         return new HashSet<State>(){{ add(state); }};
     }
 
+    /**
+     * 获取状态集中任意一个状态
+     * @param set   state set
+     * @return      Set
+     */
     public static State setToState(Set<State> set) {
-        if (set.size() == 1) {
-            return (State) set.toArray()[0];
+        if (set == null || set.size() == 0) {
+            return null;
         }
-        return null;
+        return (State) set.toArray()[0];
     }
 
     /**
