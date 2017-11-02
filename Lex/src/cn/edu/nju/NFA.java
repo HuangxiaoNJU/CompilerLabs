@@ -117,7 +117,7 @@ public class NFA extends FA {
     }
 
     /**
-     * NFA 转 DFA
+     * NFA to DFA
      * @return DFA
      */
     public DFA toDFA() {

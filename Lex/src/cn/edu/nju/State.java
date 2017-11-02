@@ -37,6 +37,7 @@ public class State {
 
     /**
      * 获取通过c边到达能到达的状态集
+     * 无则返回空集合对象
      */
     public Set<State> next(char c) {
         if (nextState.containsKey(c)) {

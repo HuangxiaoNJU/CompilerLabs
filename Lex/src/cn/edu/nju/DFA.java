@@ -5,6 +5,23 @@ import java.util.*;
 public class DFA extends FA {
 
     /**
+     * 判断字符串是否符合DFA
+     * @return  boolean
+     */
+    public boolean isMatch(String str) {
+        State state = startState;
+        char[] chars = str.toCharArray();
+        for (char c : chars) {
+            Set<State> next = state.next(c);
+            if (next.isEmpty() || next.size() > 1) {
+                return false;
+            }
+            state = StateUtil.setToState(next);
+        }
+        return state.isAcceptState();
+    }
+
+    /**
      * 获得状态所在组号
      */
     private int getGroupNum(List<Set<State>> pi, State state) {
