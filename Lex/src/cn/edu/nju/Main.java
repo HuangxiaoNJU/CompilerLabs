@@ -36,10 +36,10 @@ public class Main {
         for (int i = 0; i < dfaList.size(); i++) {
             DFA dfa = dfaList.get(i);
             if (dfa.isMatch(word)) {
-                return "<" + word + ", " + i + ">";
+                return "<" + i + ", " + word + ">";
             }
         }
-        return "<" + word + ", ERROR>";
+        return "<ERROR, " + word + ">";
     }
 
     private static void analyze() throws IOException {

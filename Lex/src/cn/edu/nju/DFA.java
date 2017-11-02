@@ -48,7 +48,9 @@ public class DFA extends FA {
         Set<Character> sigma = getSigma();
         List<Set<State>> pi = new ArrayList<>();
         List<Set<State>> newPI = new ArrayList<>();
-        pi.add(getNonAcceptState());
+        if (!getNonAcceptState().isEmpty()) {
+            pi.add(getNonAcceptState());
+        }
         pi.add(getAcceptStates());
         while (true) {
             for (Set<State> states : pi) {
