@@ -1,2 +1,16 @@
-ababa   cddc
-bab
+int main {
+	int var_1 = -199 , var_2 = 0
+	char c = 't'
+	string str = "thisisastring"
+	bool flag = true
+	var_1 = var_2
+	while flag {
+		var_1 %= 10
+		if var_1 == 0
+			flag = false
+		var_2 ++
+	}
+	print str
+	print var_2
+	return 0
+}

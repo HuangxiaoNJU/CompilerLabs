@@ -13,7 +13,10 @@ public class Regex {
         OPERATION_CHAR = Arrays.asList('|', '.', '*');
     }
 
-    public Regex(String expression) {
+    public Regex(String expression) throws RegexException {
+        if (expression.contains("$")) {
+            throw new RegexException("Regular expression musts't contain '$'!");
+        }
         this.expression = expression;
     }
 
@@ -60,14 +63,14 @@ public class Regex {
                         sb.append(stack.pop());
                     }
                     if (stack.empty() || stack.peek() != '(') {
-                        throw new RegexException();
+                        throw new RegexException("Brackets don't match!");
                     }
                     stack.pop();
                     break;
                 case '$':
                     while (!stack.empty()) {
                         if (stack.peek() == '(') {
-                            throw new RegexException();
+                            throw new RegexException("Brackets don't match!");
                         }
                         sb.append(stack.pop());
                     }
@@ -128,17 +131,6 @@ public class Regex {
             }
         }
         return stack.peek();
-    }
-
-    /**
-     * 测试main
-     */
-    public static void main(String[] args) throws RegexException {
-        Regex regex = new Regex("(a*|b*)*");
-        System.out.println(regex.appendConnectDot());
-        System.out.println(regex.postorder());
-        NFA nfa = regex.toNFA();
-        nfa.print();
     }
 
 }

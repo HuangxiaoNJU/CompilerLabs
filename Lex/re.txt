@@ -1,3 +1,8 @@
-(a|b)*a(a|b)(a|b)
-b*a(a|b)
-(c|d)*
+DataType	int|double|char|string|bool
+Keyword		true|false|return|if|while|print
+Number		0|(1|2|3|4|5|6|7|8|9)(0|1|2|3|4|5|6|7|8|9)*|-(1|2|3|4|5|6|7|8|9)(0|1|2|3|4|5|6|7|8|9)*
+Character	'a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|0|1|2|3|4|5|6|7|8|9'
+String		"(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|0|1|2|3|4|5|6|7|8|9)*"
+Identity	(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|0|1|2|3|4|5|6|7|8|9|_)*
+Operator	(+|-|/|%|<|>|=)|(+|-|/|%|<|>|=)=|++|—-
+Other		{|}|,|;
