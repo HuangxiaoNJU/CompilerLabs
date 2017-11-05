@@ -10,9 +10,9 @@
 <Operator, =>
 <Number, 0>
 <DataType, char>
-<Character, c>
+<Identity, c>
 <Operator, =>
-<ERROR,'t'>
+<Character, 't'>
 <DataType, string>
 <Identity, str>
 <Operator, =>
@@ -37,14 +37,14 @@
 <Identity, flag>
 <Operator, =>
 <Keyword, false>
+<Keyword, break>
 <Identity, var_2>
 <Operator, ++>
 <Other, }>
-<Keyword, print>
+<Identity, print>
 <Identity, str>
-<Keyword, print>
+<Identity, print>
 <Identity, var_2>
 <Keyword, return>
 <Number, 0>
-<ERROR,*()>
 <Other, }>

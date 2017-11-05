@@ -8,6 +8,7 @@ int main {
 		var_1 %= 10
 		if var_1 == 0
 			flag = false
+			break
 		var_2 ++
 	}
 	print str
