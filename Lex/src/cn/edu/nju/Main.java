@@ -77,6 +77,7 @@ public class Main {
             e.printStackTrace();
             System.out.println("File error!");
         }
+//        new Regex("(a|(a|(a|b*))*)*(a|b*)").toNFA().toDFA().minimizeDFA().print();
     }
 
 }

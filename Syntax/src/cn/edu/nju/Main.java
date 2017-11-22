@@ -4,63 +4,67 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
+
+    private static Analyzer analyzer = Analyzer.getInstance();
 
     private static final String CFG_FILE_NAME = "cfg.txt";
     private static final String INPUT_FILE_NAME = "input.txt";
 
     /**
-     * 根据大小写字母拆分字符串
-     * （提取终结符和非终结符）
+     * 根据空白字符拆分字符串
+     * （提取产生式右部元素）
      */
-    private static List<String> splitByCase(String s) {
-        List<String> res = new ArrayList<>();
-        boolean isUpperCase = 'A' <= s.charAt(0) && s.charAt(0) <= 'Z';
-        StringBuilder sb = new StringBuilder();
-        for (char c : s.toCharArray()) {
-            if ('A' <= c && c <= 'Z') {
-                if (!isUpperCase) {
-                    isUpperCase = true;
-                    res.add(sb.toString());
-                    sb = new StringBuilder();
-                }
-                res.add(String.valueOf(c));
-            } else {
-                isUpperCase = false;
-                sb.append(c);
-            }
-        }
-        if (sb.length() != 0) {
-            res.add(sb.toString());
-        }
-        return res;
+    private static List<String> splitByWhitespace(String str) {
+        return Arrays.stream(str.trim().split("\\s"))
+                .filter(s -> !s.matches("\\s") && !s.equals(""))
+                .collect(Collectors.toList());
     }
 
-    private static List<Production> getProductions() throws IOException {
+    /**
+     * 读取cfg.txt
+     * 返回所有产生式
+     * @return  产生式列表
+     */
+    private static List<Production> getProductions() throws IOException, GrammarException {
         List<Production> res = new ArrayList<>();
 
         BufferedReader br = new BufferedReader(new FileReader(CFG_FILE_NAME));
         String line;
         int id = 1;
         while ((line = br.readLine()) != null) {
-            line = line.replaceAll("\\s", "");
+            // 跳过空白行
+            if (line.equals("") || line.matches("\\s")) {
+                continue;
+            }
             String[] info = line.split("->|\\|");
+            if (info.length < 2) {
+                throw new GrammarException("产生式格式错误");
+            }
             for (int i = 1; i < info.length; i++) {
-                res.add(new Production(id++, info[0], splitByCase(info[i])));
+                res.add(new Production(id++, info[0].trim(), splitByWhitespace(info[i])));
             }
         }
         return res;
     }
 
     public static void main(String[] args) throws IOException {
-        List<Production> productions = getProductions();
-        // 加入0号产生式
-        String start = productions.get(0).left;
-        List<String> right = new ArrayList<String>(){{add(start);}};
-        productions.add(0, new Production(0, "S'", right));
-        // TODO
+        try {
+            List<Production> productions = getProductions();
+//            productions.forEach(p -> {
+//                System.out.print(p.id + ":\t" + p.left + " -> ");
+//                p.right.forEach(r -> System.out.print(r + " "));
+//                System.out.println();
+//            });
+
+            analyzer.parsingTable(productions);
+        } catch (GrammarException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

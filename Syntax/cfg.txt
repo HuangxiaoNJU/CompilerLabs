@@ -1,3 +1,9 @@
-S -> Aa|bAc|Bc|bBa
-A -> d
-B -> d
+S  -> if C then S S' | a
+S' -> else S | 0
+C  -> D C'
+C' -> or D C' | 0
+D  -> E D'
+D' -> or E D'
+D' -> 0
+E  -> ( C )
+E  -> bool
