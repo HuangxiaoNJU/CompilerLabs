@@ -1,9 +1,8 @@
-S  -> if C then S S' | a
-S' -> else S | 0
-C  -> D C'
-C' -> or D C' | 0
-D  -> E D'
-D' -> or E D'
-D' -> 0
-E  -> ( C )
-E  -> bool
+E  -> T E’
+E’ -> + T E’
+E’ -> 0
+T  -> F T’
+T’ -> * F T’
+T’ -> 0
+F  -> i
+F  -> ( E )

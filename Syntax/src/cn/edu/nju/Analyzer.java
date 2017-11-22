@@ -4,14 +4,12 @@ import java.util.*;
 
 public class Analyzer {
 
-    private static final String EPSILON = "0";
+    public static final String EPSILON = "0";
+    public static final String END = "$";
 
-    private static Analyzer analyzer;
+    private static Analyzer analyzer = new Analyzer();
 
     public static Analyzer getInstance() {
-        if (analyzer == null) {
-            analyzer = new Analyzer();
-        }
         return analyzer;
     }
 
@@ -36,7 +34,7 @@ public class Analyzer {
      * @param symbol    symbol
      * @return          true/false
      */
-    private boolean isTerminal(String symbol) {
+    public static boolean isTerminal(String symbol) {
         return !(symbol.charAt(0) >= 'A' && symbol.charAt(0) <= 'Z');
     }
 
@@ -48,6 +46,9 @@ public class Analyzer {
      */
     private Set<String> first(String vn, List<Production> productions) {
         Set<String> res = new HashSet<>();
+        if (isTerminal(vn)) {
+
+        }
         for (Production p : productions) {
             if (p.left.equals(vn)) {
                 for (String symbol : p.right) {
@@ -70,11 +71,27 @@ public class Analyzer {
         return res;
     }
 
+    private Set<String> first(List<String> symbols, List<Production> productions) {
+        Set<String> res = new HashSet<>();
+        for (String symbol : symbols) {
+            if (isTerminal(symbol)) {
+                res.add(symbol);
+                break;
+            }
+            Set<String> firstSet = first(symbol, productions);
+            res.addAll(firstSet);
+            if (!firstSet.contains(EPSILON)) {
+                break;
+            }
+        }
+        return res;
+    }
+
     private Set<String> follow(String vn, Set<String> set, List<Production> productions) {
         Set<String> res = new HashSet<>();
         // 开始符follow集中加入$
         if (vn.equals(productions.get(0).left)) {
-            res.add("$");
+            res.add(END);
         }
         for (Production p : productions) {
             if (!p.right.contains(vn)) {
@@ -127,18 +144,27 @@ public class Analyzer {
      * 构造PPT
      * @param productions   产生式
      */
-    public void parsingTable(List<Production> productions) throws GrammarException {
+    public ParsingTable parsingTable(List<Production> productions) throws GrammarException {
         preprocess(productions);
 
-//        Map<String, Set<String>> firstSet = new HashMap<>();
-//        for (Production p : productions) {
-//            if (!firstSet.containsKey(p.left)) {
-//                firstSet.put(p.left, first(p.left, productions));
-//            }
-//        }
+        // 构造PPT
+        ParsingTable parsingTable = new ParsingTable(productions);
+        for (Production p : productions) {
+            Set<String> firstSet = first(p.right, productions);
+            for (String vt : firstSet) {
+                if (!vt.equals(EPSILON)) {
+                    parsingTable.setPPT(p.left, vt, p);
+                }
+            }
+            if (firstSet.contains(EPSILON)) {
+                Set<String> followSet = follow(p.left, productions);
+                for (String vt : followSet) {
+                    parsingTable.setPPT(p.left, vt, p);
+                }
+            }
+        }
 
-        Set<String> set = follow("D'", productions);
-        set.forEach(System.out::println);
+        return parsingTable;
     }
 
 }

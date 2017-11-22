@@ -19,4 +19,12 @@ public class Production {
         this.right = right;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(id).append(":\t").append(left).append(" -> ");
+        right.forEach(s -> sb.append(s).append(" "));
+        return sb.toString();
+    }
+
 }

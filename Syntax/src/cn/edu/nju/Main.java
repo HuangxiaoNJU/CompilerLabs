@@ -61,7 +61,8 @@ public class Main {
 //                System.out.println();
 //            });
 
-            analyzer.parsingTable(productions);
+            ParsingTable ppt = analyzer.parsingTable(productions);
+            System.out.println();
         } catch (GrammarException e) {
             System.out.println(e.getMessage());
         }
