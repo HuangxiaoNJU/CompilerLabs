@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static Analyzer analyzer = Analyzer.getInstance();
+    private static Parser parser = Parser.getInstance();
 
     private static final String CFG_FILE_NAME = "cfg.txt";
     private static final String INPUT_FILE_NAME = "input.txt";
 
     /**
      * 根据空白字符拆分字符串
-     * （提取产生式右部元素）
      */
     private static List<String> splitByWhitespace(String str) {
         return Arrays.stream(str.trim().split("\\s"))
@@ -49,22 +49,37 @@ public class Main {
                 res.add(new Production(id++, info[0].trim(), splitByWhitespace(info[i])));
             }
         }
+        br.close();
         return res;
+    }
+
+    /**
+     * 读取input.txt
+     * 返回token序列
+     * @return  token序列
+     */
+    private static List<String> getTokens() throws IOException {
+        List<String> tokens = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader(INPUT_FILE_NAME));
+        String line;
+        while ((line = br.readLine()) != null) {
+            tokens.addAll(splitByWhitespace(line));
+        }
+        br.close();
+        return tokens;
     }
 
     public static void main(String[] args) throws IOException {
         try {
             List<Production> productions = getProductions();
-//            productions.forEach(p -> {
-//                System.out.print(p.id + ":\t" + p.left + " -> ");
-//                p.right.forEach(r -> System.out.print(r + " "));
-//                System.out.println();
-//            });
-
             ParsingTable ppt = analyzer.parsingTable(productions);
-            System.out.println();
+            List<String> tokens = getTokens();
+//            ppt.print();
+            parser.parse(tokens, ppt);
         } catch (GrammarException e) {
             System.out.println(e.getMessage());
+        } catch (ParsingException e) {
+            System.out.println("token序列不符合文法");
         }
     }
 

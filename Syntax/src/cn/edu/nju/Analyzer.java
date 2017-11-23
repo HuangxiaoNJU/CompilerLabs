@@ -2,10 +2,11 @@ package cn.edu.nju;
 
 import java.util.*;
 
-public class Analyzer {
+import static cn.edu.nju.Util.END;
+import static cn.edu.nju.Util.EPSILON;
+import static cn.edu.nju.Util.isTerminal;
 
-    public static final String EPSILON = "0";
-    public static final String END = "$";
+public class Analyzer {
 
     private static Analyzer analyzer = new Analyzer();
 
@@ -30,25 +31,13 @@ public class Analyzer {
     }
 
     /**
-     * 判断符号是否为终结符
-     * @param symbol    symbol
-     * @return          true/false
-     */
-    public static boolean isTerminal(String symbol) {
-        return !(symbol.charAt(0) >= 'A' && symbol.charAt(0) <= 'Z');
-    }
-
-    /**
-     * First集合
-     * @param vn            Non-terminal symbol
+     * First集合（单个非终结符）
+     * @param vn            single non-terminal
      * @param productions   productions
      * @return              First(Vn)
      */
     private Set<String> first(String vn, List<Production> productions) {
         Set<String> res = new HashSet<>();
-        if (isTerminal(vn)) {
-
-        }
         for (Production p : productions) {
             if (p.left.equals(vn)) {
                 for (String symbol : p.right) {
@@ -71,6 +60,12 @@ public class Analyzer {
         return res;
     }
 
+    /**
+     * First集合（多个符号）
+     * @param symbols       symbols
+     * @param productions   productions
+     * @return              First(symbols)
+     */
     private Set<String> first(List<String> symbols, List<Production> productions) {
         Set<String> res = new HashSet<>();
         for (String symbol : symbols) {
