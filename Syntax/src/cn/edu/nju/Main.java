@@ -69,17 +69,21 @@ public class Main {
         return tokens;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
             List<Production> productions = getProductions();
             ParsingTable ppt = analyzer.parsingTable(productions);
-            List<String> tokens = getTokens();
 //            ppt.print();
-            parser.parse(tokens, ppt);
+            List<String> tokens = getTokens();
+            List<Production> reduceSequence = parser.parse(tokens, ppt);
+            System.out.println("规约序列：");
+            reduceSequence.forEach(System.out::println);
         } catch (GrammarException e) {
             System.out.println(e.getMessage());
         } catch (ParsingException e) {
             System.out.println("token序列不符合文法");
+        } catch (IOException e) {
+            System.out.println("文件读取错误");
         }
     }
 

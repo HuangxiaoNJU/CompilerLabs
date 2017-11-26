@@ -1,5 +1,6 @@
 package cn.edu.nju;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -17,13 +18,22 @@ public class Parser {
 
     private Parser() {}
 
-    public void parse(List<String> tokens, ParsingTable ppt) throws ParsingException {
+    /**
+     * 解析token识别码
+     * @param tokens    token识别码序列
+     * @param ppt       LL(1)预测分析表
+     * @return          规约序列
+     */
+    public List<Production> parse(List<String> tokens, ParsingTable ppt) throws ParsingException {
+        // 规约序列
+        List<Production> res = new ArrayList<>();
         if (!tokens.get(tokens.size() - 1).equals(END)) {
             tokens.add(END);
         }
         Stack<String> stack = new Stack<>();
         stack.push(END);
         stack.push(ppt.getStartVn());
+        // 读头
         int readPoint = 0;
         while (readPoint < tokens.size()) {
             if (stack.empty()) {
@@ -47,6 +57,7 @@ public class Parser {
                 stack.pop();
                 // 读取预测分析表
                 Production p = ppt.M(peek, vt);
+                res.add(p);
                 // 产生式右部逆序压入栈（epsilon不压入栈）
                 for (int i = p.right.size() - 1; i >= 0; i--) {
                     String symbol = p.right.get(i);
@@ -58,9 +69,9 @@ public class Parser {
         }
         if (stack.empty()) {
             System.out.println("分析完成");
-        } else {
-            throw new ParsingException();
+            return res;
         }
+        throw new ParsingException();
     }
 
 }

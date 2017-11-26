@@ -22,7 +22,7 @@ public class Production {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(id).append(":\t").append(left).append(" -> ");
+        sb.append(left).append("\t->\t");
         right.forEach(s -> sb.append(s).append(" "));
         return sb.toString();
     }

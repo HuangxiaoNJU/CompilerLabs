@@ -2,7 +2,7 @@ package cn.edu.nju;
 
 public class Util {
 
-    public static final String EPSILON = "0";
+    public static final String EPSILON = "epsilon";
     public static final String END = "$";
 
     /**
